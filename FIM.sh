@@ -14,6 +14,12 @@ erase_baseline_if_exists() {
     fi
 }
 
+# Define colors for the output. You can change it to whatever you want
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # Leave this as is
+
 baseline_path="baseline.txt"
 
 echo ""
@@ -61,14 +67,14 @@ elif [[ "$response" =~ ^[Bb]$ ]]; then
                 # Check for new files
                 if [[ -z "${file_hash_dictionary["$filepath"]}" ]]; then
                     if [[ -z "${reported_created_files["$filepath"]}" ]]; then
-                        echo "File $filepath has been created."
+                        echo -e "${GREEN}File $filepath has been created.${NC}"
                         reported_created_files["$filepath"]=1
                     fi
                 else
                     # Check for modified files
                     if [[ "${file_hash_dictionary["$filepath"]}" != "$file_hash" ]]; then
                         if [[ -z "${reported_modified_files["$filepath"]}" ]]; then
-                            echo "File $filepath has been modified!!"
+                            echo -e "${YELLOW}File $filepath has been modified!!${NC}"
                             reported_modified_files["$filepath"]=1
                         fi
                     fi
@@ -80,8 +86,8 @@ elif [[ "$response" =~ ^[Bb]$ ]]; then
         for key in "${!file_hash_dictionary[@]}"; do
             if [ ! -f "$key" ]; then
                 if [[ -z "${reported_deleted_files["$key"]}" ]]; then
-                    echo "File $key has been deleted."
-                    reported_deleted_files["$key"]=1 
+                    echo -e "${RED}File $key has been deleted.${NC}"
+                    reported_deleted_files["$key"]=1
                 fi
             fi
         done
